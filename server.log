@@ -1,0 +1,3 @@
+  Most NODE_OPTIONs are not supported in packaged apps. See documentation for more details.
+  Most NODE_OPTIONs are not supported in packaged apps. See documentation for more details.
+  Warning: 'S' is not in the list of known options, but still passed to Electron/Chromium.
