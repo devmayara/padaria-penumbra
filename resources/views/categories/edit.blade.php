@@ -25,7 +25,6 @@
                             <x-input-label for="slug" :value="__('Slug (opcional)')" />
                             <x-text-input id="slug" class="block mt-1 w-full" type="text" name="slug" :value="old('slug', $category->slug)" placeholder="Deixe em branco para gerar automaticamente" />
                             <x-input-error :messages="$errors->get('slug')" class="mt-2" />
-                            <p class="mt-1 text-sm text-gray-500">O slug é usado para URLs amigáveis. Se deixado em branco, será gerado automaticamente a partir do nome. Use apenas letras minúsculas, números e hífens.</p>
                         </div>
 
                         <!-- Botões -->

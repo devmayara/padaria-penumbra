@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -25,6 +26,10 @@ Route::middleware(['auth', 'user.active'])->group(function () {
         Route::patch('/users/{user}/change-role', [UserController::class, 'changeRole'])->name('users.change-role');
         
         Route::resource('categories', CategoryController::class);
+        
+        Route::resource('products', ProductController::class);
+        Route::patch('/products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggle-status');
+        Route::patch('/products/{product}/update-stock', [ProductController::class, 'updateStock'])->name('products.update-stock');
     });
 });
 

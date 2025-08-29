@@ -32,8 +32,8 @@
                             <div class="bg-purple-50 p-6 rounded-lg border border-purple-200">
                                 <h4 class="text-lg font-medium text-purple-900 mb-2">Gestão de Produtos</h4>
                                 <p class="text-purple-700 mb-4">Gerencie produtos e estoque</p>
-                                <a href="#" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
-                                    Em breve
+                                <a href="{{ route('products.index') }}" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
+                                    Acessar
                                 </a>
                             </div>
                         </div>
