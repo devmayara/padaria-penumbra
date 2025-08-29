@@ -8,6 +8,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -16,7 +17,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with('category');
+        $query = Product::with(['category', 'stockMovements']);
 
         // Busca por nome
         if ($request->filled('search')) {
@@ -76,7 +77,20 @@ class ProductController extends Controller
         // Define valores padrão
         $data['is_active'] = true; // Sempre ativo por padrão
 
-        Product::create($data);
+        $product = Product::create($data);
+
+        // Registra movimentação inicial de estoque se houver quantidade
+        if ($data['current_quantity'] > 0) {
+            \App\Models\StockMovement::create([
+                'product_id' => $product->id,
+                'user_id' => Auth::id(),
+                'type' => 'entrada',
+                'quantity' => $data['current_quantity'],
+                'unit_price' => $data['unit_price'],
+                'reason' => 'Criação inicial do produto',
+                'notes' => 'Estoque inicial definido na criação do produto',
+            ]);
+        }
 
         return redirect()->route('products.index')
             ->with('success', 'Produto criado com sucesso!');
@@ -87,7 +101,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product->load('category');
+        $product->load(['category', 'stockMovements.user']);
         return view('products.show', compact('product'));
     }
 
@@ -127,7 +141,34 @@ class ProductController extends Controller
         // Define valores padrão
         $data['is_active'] = $request->has('is_active');
 
+        // Verifica se houve alteração no estoque
+        $oldQuantity = $product->current_quantity;
+        $newQuantity = $data['current_quantity'];
+        $quantityChanged = $oldQuantity != $newQuantity;
+
         $product->update($data);
+
+        // Registra movimentação se o estoque foi alterado
+        if ($quantityChanged) {
+            $difference = $newQuantity - $oldQuantity;
+            $movementType = 'ajuste';
+            
+            if ($difference > 0) {
+                $movementType = 'entrada';
+            } elseif ($difference < 0) {
+                $movementType = 'saida';
+            }
+
+            \App\Models\StockMovement::create([
+                'product_id' => $product->id,
+                'user_id' => Auth::id(),
+                'type' => $movementType,
+                'quantity' => abs($difference),
+                'unit_price' => $product->unit_price,
+                'reason' => 'Edição do produto',
+                'notes' => "Estoque alterado de {$oldQuantity} para {$newQuantity} via edição do produto",
+            ]);
+        }
 
         return redirect()->route('products.index')
             ->with('success', 'Produto atualizado com sucesso!');
@@ -174,7 +215,33 @@ class ProductController extends Controller
             'current_quantity.min' => 'A quantidade não pode ser negativa.',
         ]);
 
-        $product->update(['current_quantity' => $request->current_quantity]);
+        $oldQuantity = $product->current_quantity;
+        $newQuantity = $request->current_quantity;
+        $difference = $newQuantity - $oldQuantity;
+
+        // Determina o tipo de movimentação
+        $movementType = 'ajuste';
+        if ($difference > 0) {
+            $movementType = 'entrada';
+        } elseif ($difference < 0) {
+            $movementType = 'saida';
+        }
+
+        // Atualiza o estoque do produto
+        $product->update(['current_quantity' => $newQuantity]);
+
+        // Registra a movimentação se houve alteração
+        if ($difference != 0) {
+            \App\Models\StockMovement::create([
+                'product_id' => $product->id,
+                'user_id' => Auth::id(),
+                'type' => $movementType,
+                'quantity' => abs($difference),
+                'unit_price' => $product->unit_price,
+                'reason' => 'Atualização manual de estoque',
+                'notes' => "Estoque alterado de {$oldQuantity} para {$newQuantity} via interface de produto",
+            ]);
+        }
 
         return redirect()->route('products.show', $product)
             ->with('success', 'Estoque atualizado com sucesso!');

@@ -129,6 +129,11 @@
                                                 <span class="{{ $product->stock_status_color }}">
                                                     {{ $product->current_quantity }} - {{ $product->stock_status_text }}
                                                 </span>
+                                                @if($product->stockMovements->count() > 0)
+                                                    <div class="text-xs text-gray-500 mt-1">
+                                                        {{ $product->stockMovements->count() }} movimentações
+                                                    </div>
+                                                @endif
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">

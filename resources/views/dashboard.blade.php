@@ -36,6 +36,14 @@
                                     Acessar
                                 </a>
                             </div>
+                            
+                            <div class="bg-orange-50 p-6 rounded-lg border border-orange-200">
+                                <h4 class="text-lg font-medium text-orange-900 mb-2">Gestão de Estoque</h4>
+                                <p class="text-orange-700 mb-4">Controle movimentações e histórico</p>
+                                <a href="{{ route('stock-movements.index') }}" class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">
+                                    Acessar
+                                </a>
+                            </div>
                         </div>
                     @else
                         <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">

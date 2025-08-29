@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StockMovementController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -30,6 +31,9 @@ Route::middleware(['auth', 'user.active'])->group(function () {
         Route::resource('products', ProductController::class);
         Route::patch('/products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggle-status');
         Route::patch('/products/{product}/update-stock', [ProductController::class, 'updateStock'])->name('products.update-stock');
+        
+        Route::resource('stock-movements', StockMovementController::class);
+        Route::get('/stock-movements/product/{product}/summary', [StockMovementController::class, 'productSummary'])->name('stock-movements.product-summary');
     });
 });
 
