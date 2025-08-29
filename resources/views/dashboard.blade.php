@@ -7,52 +7,32 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Bem-vindo, {{ Auth::user()->name }}!</h3>
-                    
-                    @if(Auth::user()->role === 'admin')
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
-                                <h4 class="text-lg font-medium text-blue-900 mb-2">Gestão de Usuários</h4>
-                                <p class="text-blue-700 mb-4">Gerencie usuários, perfis e permissões</p>
-                                <a href="{{ route('users.index') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                    Acessar
-                                </a>
-                            </div>
-                            
-                            <div class="bg-green-50 p-6 rounded-lg border border-green-200">
-                                <h4 class="text-lg font-medium text-green-900 mb-2">Gestão de Categorias</h4>
-                                <p class="text-green-700 mb-4">Gerencie categorias de produtos</p>
-                                <a href="{{ route('categories.index') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                                    Acessar
-                                </a>
-                            </div>
-                            
-                            <div class="bg-purple-50 p-6 rounded-lg border border-purple-200">
-                                <h4 class="text-lg font-medium text-purple-900 mb-2">Gestão de Produtos</h4>
-                                <p class="text-purple-700 mb-4">Gerencie produtos e estoque</p>
-                                <a href="{{ route('products.index') }}" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
-                                    Acessar
-                                </a>
-                            </div>
-                            
-                            <div class="bg-orange-50 p-6 rounded-lg border border-orange-200">
-                                <h4 class="text-lg font-medium text-orange-900 mb-2">Gestão de Estoque</h4>
-                                <p class="text-orange-700 mb-4">Controle movimentações e histórico</p>
-                                <a href="{{ route('stock-movements.index') }}" class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">
-                                    Acessar
-                                </a>
-                            </div>
+            @if(Auth::user()->role === 'admin')
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900">
+                        <h3 class="text-lg font-semibold mb-4">Gestão Administrativa</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <a href="{{ route('users.index') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded text-center">
+                                Gestão de Usuários
+                            </a>
+                            <a href="{{ route('categories.index') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 rounded text-center">
+                                Gestão de Categorias
+                            </a>
+                            <a href="{{ route('products.index') }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-3 px-4 rounded text-center">
+                                Gestão de Produtos
+                            </a>
+                            <a href="{{ route('stock-movements.index') }}" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded text-center">
+                                Gestão de Estoque
+                            </a>
+                            <a href="{{ route('orders.index') }}" class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded text-center">
+                                Gestão de Pedidos
+                            </a>
                         </div>
-                    @else
-                        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-                            <h4 class="text-lg font-medium text-gray-900 mb-2">Área do Cliente</h4>
-                            <p class="text-gray-700">Em breve você poderá fazer pedidos e acompanhar suas compras.</p>
-                        </div>
-                    @endif
+                    </div>
                 </div>
-            </div>
+            @else
+                @include('dashboard-member')
+            @endif
         </div>
     </div>
 </x-app-layout>

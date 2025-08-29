@@ -13,6 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'user.active' => \App\Http\Middleware\EnsureUserIsActive::class,
+            'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+            'member' => \App\Http\Middleware\EnsureUserIsMember::class,
+            'redirect.members' => \App\Http\Middleware\RedirectMembersToMarketplace::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

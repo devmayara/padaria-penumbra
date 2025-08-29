@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -17,6 +17,11 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+        // Apenas admins podem acessar a gestão de produtos
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'Acesso negado. Apenas administradores podem acessar a gestão de produtos.');
+        }
+
         $query = Product::with(['category', 'stockMovements']);
 
         // Busca por nome
@@ -39,10 +44,39 @@ class ProductController extends Controller
             }
         }
 
-        $products = $query->orderBy('name')->paginate(5);
+        $products = $query->orderBy('name')->paginate(12);
         $categories = Category::orderBy('name')->get();
 
         return view('products.index', compact('products', 'categories'));
+    }
+
+    /**
+     * Display the marketplace for members.
+     */
+    public function marketplace(Request $request)
+    {
+        // Apenas membros podem acessar o marketplace
+        if (Auth::user()->role !== 'member') {
+            abort(403, 'Acesso negado. Apenas membros podem acessar o marketplace.');
+        }
+
+        $query = Product::where('is_active', true)->with(['category']);
+
+        // Busca por nome
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        // Filtro por categoria
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        $products = $query->orderBy('name')->paginate(12);
+        $categories = Category::orderBy('name')->get();
+
+        return view('products.marketplace', compact('products', 'categories'));
     }
 
     /**
@@ -51,6 +85,7 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::orderBy('name')->get();
+
         return view('products.create', compact('categories'));
     }
 
@@ -60,7 +95,7 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
         $data = $request->validated();
-        
+
         // Gera o slug automaticamente se não fornecido
         if (empty($data['slug'])) {
             $data['slug'] = $this->generateUniqueSlug($data['name']);
@@ -101,8 +136,32 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        // Apenas admins podem acessar a gestão de produtos
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'Acesso negado. Apenas administradores podem acessar a gestão de produtos.');
+        }
+
         $product->load(['category', 'stockMovements.user']);
         return view('products.show', compact('product'));
+    }
+
+    /**
+     * Display the specified product in marketplace for members.
+     */
+    public function marketplaceShow(Product $product)
+    {
+        // Apenas membros podem acessar o marketplace
+        if (Auth::user()->role !== 'member') {
+            abort(403, 'Acesso negado. Apenas membros podem acessar o marketplace.');
+        }
+
+        // Verifica se o produto está ativo
+        if (!$product->is_active) {
+            abort(404, 'Produto não encontrado.');
+        }
+
+        $product->load(['category']);
+        return view('products.show-member', compact('product'));
     }
 
     /**
@@ -111,6 +170,7 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::orderBy('name')->get();
+
         return view('products.edit', compact('product', 'categories'));
     }
 
@@ -120,7 +180,7 @@ class ProductController extends Controller
     public function update(ProductRequest $request, Product $product)
     {
         $data = $request->validated();
-        
+
         // Gera o slug automaticamente se não fornecido
         if (empty($data['slug'])) {
             $data['slug'] = $this->generateUniqueSlug($data['name'], $product->id);
@@ -152,7 +212,7 @@ class ProductController extends Controller
         if ($quantityChanged) {
             $difference = $newQuantity - $oldQuantity;
             $movementType = 'ajuste';
-            
+
             if ($difference > 0) {
                 $movementType = 'entrada';
             } elseif ($difference < 0) {
@@ -191,19 +251,20 @@ class ProductController extends Controller
     }
 
     /**
-     * Toggle product status (active/inactive)
+     * Toggle product status (active/inactive).
      */
     public function toggleStatus(Product $product)
     {
         $product->update(['is_active' => !$product->is_active]);
-        
+
         $status = $product->is_active ? 'ativado' : 'desativado';
+
         return redirect()->route('products.index')
             ->with('success', "Produto {$status} com sucesso!");
     }
 
     /**
-     * Update product stock
+     * Update product stock.
      */
     public function updateStock(Request $request, Product $product)
     {
@@ -248,7 +309,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Generate a unique slug for the product
+     * Generate a unique slug for the product.
      */
     private function generateUniqueSlug(string $name, ?int $excludeId = null): string
     {
@@ -257,20 +318,20 @@ class ProductController extends Controller
         $counter = 1;
 
         while ($this->slugExists($slug, $excludeId)) {
-            $slug = $baseSlug . '-' . $counter;
-            $counter++;
+            $slug = $baseSlug.'-'.$counter;
+            ++$counter;
         }
 
         return $slug;
     }
 
     /**
-     * Check if a slug already exists
+     * Check if a slug already exists.
      */
     private function slugExists(string $slug, ?int $excludeId = null): bool
     {
         $query = Product::where('slug', $slug);
-        
+
         if ($excludeId) {
             $query->where('id', '!=', $excludeId);
         }
@@ -279,18 +340,18 @@ class ProductController extends Controller
     }
 
     /**
-     * Upload and process image
+     * Upload and process image.
      */
     private function uploadImage($image)
     {
-        $filename = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+        $filename = time().'_'.Str::random(10).'.'.$image->getClientOriginalExtension();
         $path = $image->storeAs('products', $filename, 'public');
 
         return $path;
     }
 
     /**
-     * Delete image
+     * Delete image.
      */
     private function deleteImage($imagePath)
     {

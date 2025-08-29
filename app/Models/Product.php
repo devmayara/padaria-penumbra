@@ -44,6 +44,14 @@ class Product extends Model
     }
 
     /**
+     * Get the order items for the product.
+     */
+    public function orderItems(): HasMany
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+    /**
      * Get the product's image URL.
      */
     public function getImageUrlAttribute(): ?string
@@ -65,7 +73,7 @@ class Product extends Model
     /**
      * Check if product is in stock.
      */
-    public function isInStock(): bool
+    public function getIsInStockAttribute(): bool
     {
         return $this->current_quantity > 0;
     }
@@ -73,7 +81,7 @@ class Product extends Model
     /**
      * Check if product is low in stock (less than 10 items).
      */
-    public function isLowStock(): bool
+    public function getIsLowStockAttribute(): bool
     {
         return $this->current_quantity > 0 && $this->current_quantity < 10;
     }
@@ -85,7 +93,7 @@ class Product extends Model
     {
         if ($this->current_quantity === 0) {
             return 'Sem estoque';
-        } elseif ($this->isLowStock()) {
+        } elseif ($this->is_low_stock) {
             return 'Estoque baixo';
         } else {
             return 'Em estoque';
@@ -99,7 +107,7 @@ class Product extends Model
     {
         if ($this->current_quantity === 0) {
             return 'text-red-600';
-        } elseif ($this->isLowStock()) {
+        } elseif ($this->is_low_stock) {
             return 'text-yellow-600';
         } else {
             return 'text-green-600';
