@@ -16,11 +16,17 @@ class RedirectMembersToMarketplace
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Se o usuário estiver logado e for membro, redireciona para o marketplace
-        if (Auth::check() && Auth::user()->role === 'member') {
-            // Se estiver tentando acessar o dashboard, redireciona para o marketplace
-            if ($request->routeIs('dashboard')) {
+        if (Auth::check()) {
+            $user = Auth::user();
+            
+            // Se for membro e estiver tentando acessar o dashboard, redireciona para o marketplace
+            if ($user->role === 'member' && $request->routeIs('dashboard')) {
                 return redirect()->route('marketplace.index');
+            }
+            
+            // Se for admin e estiver tentando acessar o dashboard, redireciona para o admin dashboard
+            if ($user->role === 'admin' && $request->routeIs('dashboard')) {
+                return redirect()->route('admin.dashboard');
             }
         }
 
