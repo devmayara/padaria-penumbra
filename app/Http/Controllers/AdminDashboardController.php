@@ -75,12 +75,13 @@ class AdminDashboardController extends Controller
             ->get();
 
         // Estatísticas adicionais
-        $recentOrders = Order::with(['user', 'items.product'])
+        $recentOrders = Order::with(['user', 'items.product.category'])
             ->latest()
             ->limit(5)
             ->get();
 
-        $lowStockProducts = Product::where('current_quantity', '<=', 10)
+        $lowStockProducts = Product::with('category')
+            ->where('current_quantity', '<=', 10)
             ->where('is_active', true)
             ->limit(5)
             ->get();

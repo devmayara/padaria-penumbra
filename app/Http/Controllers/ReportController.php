@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\User;
+use App\Http\Requests\ReportRequest;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -11,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
+
+
     /**
      * Display the reports index page.
      */

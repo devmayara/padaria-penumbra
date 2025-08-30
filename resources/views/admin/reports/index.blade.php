@@ -30,7 +30,8 @@
                     
                     <div class="flex gap-2">
                         <button type="submit" 
-                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                                aria-label="Filtrar relatórios pelo período selecionado">
                             Filtrar
                         </button>
                         
@@ -93,11 +94,13 @@
                     <h2 class="text-xl font-semibold text-gray-800">Relatório de Pedidos</h2>
                     <div class="flex gap-2">
                         <a href="{{ route('admin.reports.orders-csv') }}?start_date={{ $startDate->format('Y-m-d') }}&end_date={{ $endDate->format('Y-m-d') }}" 
-                        class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors"
+                        aria-label="Exportar relatório de pedidos em formato CSV">
                             Exportar CSV
                         </a>
                         <a href="{{ route('admin.reports.orders-pdf') }}?start_date={{ $startDate->format('Y-m-d') }}&end_date={{ $endDate->format('Y-m-d') }}" 
-                        class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
+                        class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
+                        aria-label="Exportar relatório de pedidos em formato PDF">
                             Exportar PDF
                         </a>
                     </div>
@@ -158,10 +161,11 @@
             <div class="bg-white rounded-lg shadow-md p-6 mb-8">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-semibold text-gray-800">Itens Mais Vendidos</h2>
-                    <a href="{{ route('admin.reports.top-selling-csv') }}?start_date={{ $startDate->format('Y-m-d') }}&end_date={{ $endDate->format('Y-m-d') }}" 
-                    class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        Exportar CSV
-                    </a>
+                                <a href="{{ route('admin.reports.top-selling-csv') }}?start_date={{ $startDate->format('Y-m-d') }}&end_date={{ $endDate->format('Y-m-d') }}" 
+               class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors"
+               aria-label="Exportar relatório de itens mais vendidos em formato CSV">
+                Exportar CSV
+            </a>
                 </div>
 
                 <div class="overflow-x-auto">
@@ -198,10 +202,11 @@
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-semibold text-gray-800">Top Clientes</h2>
-                    <a href="{{ route('admin.reports.top-clients-csv') }}?start_date={{ $startDate->format('Y-m-d') }}&end_date={{ $endDate->format('Y-m-d') }}" 
-                    class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        Exportar CSV
-                    </a>
+                                <a href="{{ route('admin.reports.top-clients-csv') }}?start_date={{ $startDate->format('Y-m-d') }}&end_date={{ $endDate->format('Y-m-d') }}" 
+               class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors"
+               aria-label="Exportar relatório de top clientes em formato CSV">
+                Exportar CSV
+            </a>
                 </div>
 
                 <div class="overflow-x-auto">
