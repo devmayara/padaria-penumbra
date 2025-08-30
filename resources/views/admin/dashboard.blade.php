@@ -30,6 +30,9 @@
                         <a href="{{ route('tickets.index') }}" class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-3 px-4 rounded text-center">
                             Fichas
                         </a>
+                        <a href="{{ route('admin.reports.index') }}" class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded text-center">
+                            Relatórios
+                        </a>
                     </div>
                 </div>
             </div>

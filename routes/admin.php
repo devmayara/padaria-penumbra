@@ -7,6 +7,7 @@ use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -51,4 +52,11 @@ Route::middleware(['auth', 'verified', 'user.active', 'admin'])->group(function 
     Route::get('admin/tickets/{ticket}/download', [TicketController::class, 'download'])->name('tickets.download');
     Route::patch('admin/tickets/{ticket}/print', [TicketController::class, 'print'])->name('tickets.print');
     Route::patch('admin/tickets/{ticket}/regenerate', [TicketController::class, 'regenerate'])->name('tickets.regenerate');
+    
+    // Relatórios
+    Route::get('admin/reports', [ReportController::class, 'index'])->name('admin.reports.index');
+    Route::get('admin/reports/orders-csv', [ReportController::class, 'exportOrdersCsv'])->name('admin.reports.orders-csv');
+    Route::get('admin/reports/orders-pdf', [ReportController::class, 'exportOrdersPdf'])->name('admin.reports.orders-pdf');
+    Route::get('admin/reports/top-selling-csv', [ReportController::class, 'exportTopSellingCsv'])->name('admin.reports.top-selling-csv');
+    Route::get('admin/reports/top-clients-csv', [ReportController::class, 'exportTopClientsCsv'])->name('admin.reports.top-clients-csv');
 });
