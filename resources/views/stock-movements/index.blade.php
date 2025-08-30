@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Gestão de Estoque - Movimentações') }}
+            {{ __('Gestão de Estoque') }}
         </h2>
     </x-slot>
 
@@ -11,7 +11,7 @@
                 <div class="p-6 text-gray-900">
                     <!-- Cabeçalho com botão de criar -->
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-medium">Movimentações de Estoque</h3>
+                        <h3 class="text-lg font-medium">Lista de Movimentações</h3>
                         <a href="{{ route('stock-movements.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                             Nova Movimentação
                         </a>

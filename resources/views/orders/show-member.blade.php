@@ -6,19 +6,20 @@
             <!-- Informações do Pedido -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Informações do Pedido</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                        Informações do Pedido
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $order->status_badge_color }}">
+                            {{ $order->status_text }}
+                        </span>
+                    </h3>
                     <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <dt class="text-sm font-medium text-gray-500">Número do Pedido</dt>
                             <dd class="mt-1 text-sm text-gray-900">#{{ $order->order_number }}</dd>
                         </div>
                         <div>
-                            <dt class="text-sm font-medium text-gray-500">Status</dt>
-                            <dd class="mt-1">
-                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $order->status_badge_color }}">
-                                    {{ $order->status_text }}
-                                </span>
-                            </dd>
+                            <dt class="text-sm font-medium text-gray-500">Ficha do Pedido</dt>
+                            <dd class="mt-1 text-sm text-gray-900">#{{ $order->ticket->ticket_number }}</dd>
                         </div>
                         <div>
                             <dt class="text-sm font-medium text-gray-500">Data de Criação</dt>
@@ -154,6 +155,20 @@
                                 </button>
                             </form>
                         @endif
+                        
+                        <!-- Botão para visualizar ficha -->
+                        @if($order->ticket)
+                            <div class="flex items-center space-x-2">
+                                <a href="{{ route('member.tickets.show', $order->ticket) }}" class="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 text-sm">
+                                    Ver Ficha
+                                </a>
+                            </div>
+                        @else
+                            <span class="px-3 py-2 bg-yellow-100 text-yellow-800 rounded-md text-sm">
+                                ⚠️ Ficha não gerada
+                            </span>
+                        @endif
+                        
                         <a href="{{ route('member.orders.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                             Voltar à Lista
                         </a>

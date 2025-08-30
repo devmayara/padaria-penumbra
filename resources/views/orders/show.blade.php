@@ -34,10 +34,10 @@
                             <h4 class="text-sm font-medium text-gray-500 mb-2">Total do Pedido</h4>
                             <p class="text-2xl font-bold text-indigo-600">R$ {{ number_format($order->total_amount, 2, ',', '.') }}</p>
                         </div>
-                        
+
                         <div>
-                            <h4 class="text-sm font-medium text-gray-500 mb-2">Número do Pedido</h4>
-                            <p class="text-sm font-mono text-gray-900">{{ $order->order_number }}</p>
+                            <h4 class="text-sm font-medium text-gray-500 mb-2">Ficha do Pedido</h4>
+                            <p class="text-sm font-mono text-gray-900">#{{ $order->ticket->ticket_number }}</p>
                         </div>
                     </div>
                     
@@ -231,6 +231,19 @@
                                             Marcar como Entregue
                                         </button>
                                     </form>
+                                @endif
+                                
+                                <!-- Botão para visualizar ficha -->
+                                @if($order->ticket)
+                                    <div class="flex items-center space-x-2">
+                                        <a href="{{ route('tickets.show', $order->ticket) }}" class="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 text-sm">
+                                            Ver Ficha
+                                        </a>
+                                    </div>
+                                @else
+                                    <span class="px-3 py-2 bg-yellow-100 text-yellow-800 rounded-md text-sm">
+                                        ⚠️ Ficha não gerada
+                                    </span>
                                 @endif
                                 
                                 <!-- Botão de retorno de status (apenas para admin) -->

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\StockMovement;
+use App\Models\Ticket;
+use App\Services\QrCodeService;
+use App\Services\PdfService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -169,10 +172,13 @@ class OrderController extends Controller
                 foreach ($items as $item) {
                     $order->items()->create($item);
                 }
+
+                // Gera ficha automaticamente para o pedido
+                $this->generateTicketForOrder($order);
             });
 
             return redirect()->route('orders.show', Order::latest()->first())
-                ->with('success', 'Pedido criado com sucesso!');
+                ->with('success', 'Pedido criado com sucesso! Ficha gerada automaticamente.');
         } catch (\Exception $e) {
             return back()->withInput()->with('error', 'Erro ao criar pedido: '.$e->getMessage());
         }
@@ -247,10 +253,13 @@ class OrderController extends Controller
                 foreach ($items as $item) {
                     $order->items()->create($item);
                 }
+
+                // Gera ficha automaticamente para o pedido
+                $this->generateTicketForOrder($order);
             });
 
             return redirect()->route('member.orders.show', Order::latest()->first())
-                ->with('success', 'Pedido criado com sucesso!');
+                ->with('success', 'Pedido criado com sucesso! Ficha gerada automaticamente.');
         } catch (\Exception $e) {
             return back()->withInput()->with('error', 'Erro ao criar pedido: '.$e->getMessage());
         }
@@ -653,6 +662,51 @@ class OrderController extends Controller
                 ->with('success', 'Pedido cancelado com sucesso!');
         } catch (\Exception $e) {
             return back()->with('error', 'Erro ao cancelar pedido: '.$e->getMessage());
+        }
+    }
+
+    /**
+     * Generate ticket for an order automatically.
+     */
+    private function generateTicketForOrder(Order $order)
+    {
+        try {
+            // Gera número único da ficha
+            $ticketNumber = Ticket::generateTicketNumber();
+            
+            // Cria a ficha
+            $ticket = Ticket::create([
+                'order_id' => $order->id,
+                'ticket_number' => $ticketNumber,
+                'status' => 'pendente',
+                'notes' => 'Ficha gerada automaticamente ao criar pedido',
+            ]);
+
+            // Gera QR code
+            $qrCodeService = app(QrCodeService::class);
+            $qrData = $qrCodeService->generateTicketData($ticketNumber, $order->id);
+            $qrCodePath = $qrCodeService->saveToStorage($qrData, $ticketNumber);
+            
+            // Atualiza a ficha com o caminho do QR code
+            $ticket->update([
+                'qr_code_path' => $qrCodePath,
+                'status' => 'pendente',
+            ]);
+            
+            // Gera PDF (que incluirá o QR code inline)
+            $pdfService = app(PdfService::class);
+            $pdfPath = $pdfService->generateTicketPdf($ticket);
+            
+            // Atualiza a ficha com o caminho do PDF
+            $ticket->update([
+                'pdf_path' => $pdfPath,
+                'status' => 'gerado',
+                'generated_at' => now(),
+            ]);
+
+        } catch (\Exception $e) {
+            // Log do erro mas não falha a criação do pedido
+            \Illuminate\Support\Facades\Log::error('Erro ao gerar ficha para pedido #'.$order->order_number.': '.$e->getMessage());
         }
     }
 }

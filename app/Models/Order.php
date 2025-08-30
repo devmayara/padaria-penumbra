@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Models\OrderItem;
 
 class Order extends Model
@@ -52,6 +53,14 @@ class Order extends Model
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    /**
+     * Get the ticket for the order.
+     */
+    public function ticket(): HasOne
+    {
+        return $this->hasOne(Ticket::class);
     }
 
     /**
@@ -130,5 +139,13 @@ class Order extends Model
         } while (static::where('order_number', $number)->exists());
 
         return $number;
+    }
+
+    /**
+     * Get formatted total amount.
+     */
+    public function getFormattedTotalAmountAttribute(): string
+    {
+        return 'R$ ' . number_format($this->total_amount, 2, ',', '.');
     }
 }

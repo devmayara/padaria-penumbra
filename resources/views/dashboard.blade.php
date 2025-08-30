@@ -13,19 +13,22 @@
                         <h3 class="text-lg font-semibold mb-4">Gestão Administrativa</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             <a href="{{ route('users.index') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded text-center">
-                                Gestão de Usuários
+                                Usuários
                             </a>
                             <a href="{{ route('categories.index') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 rounded text-center">
-                                Gestão de Categorias
+                                Categorias
                             </a>
                             <a href="{{ route('products.index') }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-3 px-4 rounded text-center">
-                                Gestão de Produtos
+                                Produtos
                             </a>
                             <a href="{{ route('stock-movements.index') }}" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded text-center">
-                                Gestão de Estoque
+                                Estoque
                             </a>
                             <a href="{{ route('orders.index') }}" class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded text-center">
-                                Gestão de Pedidos
+                                Pedidos
+                            </a>
+                            <a href="{{ route('tickets.index') }}" class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-3 px-4 rounded text-center">
+                                Fichas
                             </a>
                         </div>
                     </div>

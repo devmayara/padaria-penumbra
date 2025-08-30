@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,4 +40,11 @@ Route::middleware(['auth', 'verified', 'user.active', 'admin'])->group(function 
     Route::patch('orders/{order}/advance-status', [OrderController::class, 'advanceStatus'])->name('orders.advance-status');
     Route::patch('orders/{order}/mark-as-delivered', [OrderController::class, 'markAsDelivered'])->name('orders.mark-as-delivered');
     Route::patch('orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+    
+    // Gestão de Fichas (Tickets)
+    Route::get('admin/tickets', [TicketController::class, 'index'])->name('tickets.index');
+    Route::get('admin/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
+    Route::get('admin/tickets/{ticket}/download', [TicketController::class, 'download'])->name('tickets.download');
+    Route::patch('admin/tickets/{ticket}/print', [TicketController::class, 'print'])->name('tickets.print');
+    Route::patch('admin/tickets/{ticket}/regenerate', [TicketController::class, 'regenerate'])->name('tickets.regenerate');
 });

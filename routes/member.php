@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,4 +27,9 @@ Route::middleware(['auth', 'verified', 'user.active', 'member'])->group(function
     Route::post('my-orders', [OrderController::class, 'memberStore'])->name('member.orders.store');
     Route::get('my-orders/{order}', [OrderController::class, 'memberShow'])->name('member.orders.show');
     Route::patch('my-orders/{order}/cancel', [OrderController::class, 'memberCancel'])->name('member.orders.cancel');
+    
+    // Gestão de Fichas (Tickets) - Rotas específicas para membros
+    Route::get('tickets/{ticket}', [TicketController::class, 'show'])->name('member.tickets.show');
+    Route::get('tickets/{ticket}/download', [TicketController::class, 'download'])->name('member.tickets.download');
+    Route::patch('tickets/{ticket}/print', [TicketController::class, 'print'])->name('member.tickets.print');
 });
