@@ -16,8 +16,12 @@ class EnsureUserIsMember
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::check() || Auth::user()->role !== 'member') {
-            abort(403, 'Acesso negado. Apenas membros podem acessar esta funcionalidade.');
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        if (Auth::user()->role !== 'member') {
+            abort(403);
         }
 
         return $next($request);

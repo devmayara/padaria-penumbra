@@ -19,5 +19,15 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        // Tratamento de exceções de autenticação
+        $exceptions->renderable(function (\Illuminate\Auth\AuthenticationException $e, $request) {
+            return redirect()->route('login');
+        });
+
+        // Tratamento de exceções de autorização (403)
+        $exceptions->renderable(function (\Symfony\Component\HttpKernel\Exception\HttpException $e, $request) {
+            if ($e->getStatusCode() === 403) {
+                return response()->view('errors.403', [], 403);
+            }
+        });
     })->create();

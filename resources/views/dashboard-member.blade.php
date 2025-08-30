@@ -7,7 +7,7 @@
             <div class="p-6 text-gray-900">
                 <h3 class="text-lg font-semibold mb-4">Área do Cliente</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <a href="{{ route('marketplace.index') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg text-center shadow-md hover:shadow-lg transition-all">
+                    <a href="{{ route('member.marketplace') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg text-center shadow-md hover:shadow-lg transition-all">
                         <div class="text-2xl mb-2">🛍️</div>
                         <div class="font-semibold">Catálogo de Produtos</div>
                         <div class="text-sm opacity-90">Explore nossos produtos</div>

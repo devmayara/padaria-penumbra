@@ -35,7 +35,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(route('admin.dashboard', absolute: false));
         } else {
             // Para membros, redireciona direto para o marketplace
-            return redirect()->intended(route('marketplace.index', absolute: false));
+            return redirect()->intended(route('member.marketplace', absolute: false));
         }
     }
 

@@ -19,9 +19,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth', 'verified', 'user.active', 'admin'])->group(function () {
+Route::middleware(['auth', 'verified', 'user.active', 'admin'])->prefix('admin')->group(function () {
     // Dashboard Administrativo
-    Route::get('/admin-dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     
     // Gestão de Usuários
     Route::resource('users', UserController::class);
@@ -47,16 +47,15 @@ Route::middleware(['auth', 'verified', 'user.active', 'admin'])->group(function 
     Route::patch('orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
     
     // Gestão de Fichas (Tickets)
-    Route::get('admin/tickets', [TicketController::class, 'index'])->name('tickets.index');
-    Route::get('admin/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
-    Route::get('admin/tickets/{ticket}/download', [TicketController::class, 'download'])->name('tickets.download');
-    Route::patch('admin/tickets/{ticket}/print', [TicketController::class, 'print'])->name('tickets.print');
-    Route::patch('admin/tickets/{ticket}/regenerate', [TicketController::class, 'regenerate'])->name('tickets.regenerate');
+    Route::resource('tickets', TicketController::class);
+    Route::get('tickets/{ticket}/download', [TicketController::class, 'download'])->name('tickets.download');
+    Route::patch('tickets/{ticket}/print', [TicketController::class, 'print'])->name('tickets.print');
+    Route::patch('tickets/{ticket}/regenerate', [TicketController::class, 'regenerate'])->name('tickets.regenerate');
     
     // Relatórios
-    Route::get('admin/reports', [ReportController::class, 'index'])->name('admin.reports.index');
-    Route::get('admin/reports/orders-csv', [ReportController::class, 'exportOrdersCsv'])->name('admin.reports.orders-csv');
-    Route::get('admin/reports/orders-pdf', [ReportController::class, 'exportOrdersPdf'])->name('admin.reports.orders-pdf');
-    Route::get('admin/reports/top-selling-csv', [ReportController::class, 'exportTopSellingCsv'])->name('admin.reports.top-selling-csv');
-    Route::get('admin/reports/top-clients-csv', [ReportController::class, 'exportTopClientsCsv'])->name('admin.reports.top-clients-csv');
+    Route::get('reports', [ReportController::class, 'index'])->name('admin.reports.index');
+    Route::get('reports/orders-csv', [ReportController::class, 'exportOrdersCsv'])->name('admin.reports.orders-csv');
+    Route::get('reports/orders-pdf', [ReportController::class, 'exportOrdersPdf'])->name('admin.reports.orders-pdf');
+    Route::get('reports/top-selling-csv', [ReportController::class, 'exportTopSellingCsv'])->name('admin.reports.top-selling-csv');
+    Route::get('reports/top-clients-csv', [ReportController::class, 'exportTopClientsCsv'])->name('admin.reports.top-clients-csv');
 });

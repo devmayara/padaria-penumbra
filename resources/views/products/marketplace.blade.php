@@ -7,7 +7,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6 text-gray-900">
                     <h3 class="text-lg font-semibold mb-4">Filtrar Produtos</h3>
-                    <form method="GET" action="{{ route('marketplace.index') }}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+                    <form method="GET" action="{{ route('member.marketplace') }}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                         <div>
                             <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Buscar por nome</label>
                             <input type="text" name="search" id="search" value="{{ request('search') }}" 
@@ -31,7 +31,7 @@
                             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">
                                 Filtrar
                             </button>
-                            <a href="{{ route('marketplace.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+                            <a href="{{ route('member.marketplace') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
                                 Limpar
                             </a>
                         </div>
@@ -58,23 +58,20 @@
                         
                         <!-- Informações do Produto -->
                         <div class="p-4">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $product->stock_status_color }}">
-                                    {{ $product->stock_status_text }}
-                                </span>
-                                <span class="text-xs text-gray-500">{{ $product->category->name }}</span>
-                            </div>
-                            
                             <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $product->name }}</h3>
+                            <p class="text-sm text-gray-600 mb-2">{{ $product->category->name }}</p>
+                            <p class="text-gray-700 mb-2">{{ Str::limit($product->description, 100) }}</p>
                             
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="text-2xl font-bold text-indigo-600">{{ $product->formatted_price }}</span>
-                                <span class="text-sm text-gray-600">Estoque: {{ $product->current_quantity }}</span>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-2xl font-bold text-green-600">R$ {{ number_format($product->unit_price, 2, ',', '.') }}</span>
+                                <span class="text-sm {{ $product->is_in_stock ? 'text-green-600' : 'text-red-600' }}">
+                                    {{ $product->is_in_stock ? 'Em estoque' : 'Sem estoque' }}
+                                </span>
                             </div>
                             
                             <!-- Botões de Ação -->
                             <div class="flex space-x-2">
-                                <a href="{{ route('marketplace.show', $product) }}" 
+                                <a href="{{ route('member.marketplace.show', $product) }}" 
                                    class="flex-1 bg-blue-500 hover:bg-blue-700 text-white text-center py-2 px-4 rounded-md text-sm font-medium transition-colors">
                                     Ver Detalhes
                                 </a>
@@ -165,7 +162,7 @@
         document.getElementById('cartModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeCartModal();
-            }
+        }
         });
     </script>
 @endsection

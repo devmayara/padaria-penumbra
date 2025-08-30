@@ -21,7 +21,7 @@ class RedirectMembersToMarketplace
             
             // Se for membro e estiver tentando acessar o dashboard, redireciona para o marketplace
             if ($user->role === 'member' && $request->routeIs('dashboard')) {
-                return redirect()->route('marketplace.index');
+                return redirect()->route('member.marketplace');
             }
             
             // Se for admin e estiver tentando acessar o dashboard, redireciona para o admin dashboard

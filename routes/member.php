@@ -16,10 +16,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth', 'verified', 'user.active', 'member'])->group(function () {
+Route::middleware(['auth', 'verified', 'user.active', 'member'])->prefix('member')->group(function () {
     // Catálogo de Produtos (Marketplace) - Rotas específicas para membros
-    Route::get('marketplace', [ProductController::class, 'marketplace'])->name('marketplace.index');
-    Route::get('marketplace/{product}', [ProductController::class, 'marketplaceShow'])->name('marketplace.show');
+    Route::get('marketplace', [ProductController::class, 'marketplace'])->name('member.marketplace');
+    Route::get('marketplace/{product}', [ProductController::class, 'marketplaceShow'])->name('member.marketplace.show');
 
     // Gestão de Pedidos (apenas pedidos próprios) - Rotas específicas para membros
     Route::get('my-orders', [OrderController::class, 'memberIndex'])->name('member.orders.index');
